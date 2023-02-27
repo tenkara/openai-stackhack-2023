@@ -1,0 +1,12 @@
+Authentication with Auth0
+Setup Postgres, SQLAlchemy (raj)
+Setup ORM (raj)
+Connect to Redis vectorize database (raj)
+Authentication routes (josh)
+Business logic chatting with AI (josh, raj)
+    Caching
+    Preserving session
+    Generation of the responses
+    https://github.com/RedisVentures/redis-openai-qna
+
+Retreive EHR
