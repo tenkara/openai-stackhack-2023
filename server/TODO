@@ -1,6 +1,6 @@
 Authentication with Auth0
-Setup Postgres, SQLAlchemy (raj)
-Setup ORM (raj)
+Setup Postgres, SQLAlchemy (raj) (done, see login.py, and .env)
+Setup ORM (raj) (done, see login.py)
 Connect to Redis vectorize database (raj)
 Authentication routes (josh)
 Business logic chatting with AI (josh, raj)
