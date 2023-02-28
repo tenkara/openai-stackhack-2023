@@ -10,3 +10,16 @@ Business logic chatting with AI (josh, raj)
     https://github.com/RedisVentures/redis-openai-qna
 
 Retreive EHR
+
+Process to obtain Embeddings:
+1. Prepare the data csv file with the data sections from scraping 
+2. Start with a small subset of the data csv file
+3. Use this code to get the embeddings and save them locally for reuse - https://github.com/openai/openai-cookbook/blob/main/examples/Obtain_dataset.ipynb
+4. Review this doc for model (use second gen model), tokenizer, max input tokens and output dimensions - https://platform.openai.com/docs/guides/embeddings/what-are-embeddings
+
+Process to get started with Redis vector database and openai:
+5. To retreive K nearest embedding vectors quickly with Redis vector database use this cookbook - https://github.com/openai/openai-cookbook/tree/main/examples/vector_databases/redis
+6. For step by step setup of Redis as a vector databsae with openai use this - https://github.com/openai/openai-cookbook/blob/main/examples/vector_databases/redis/getting-started-with-redis-and-openai.ipynb
+7. To run Redis locally - https://discord.com/channels/877056448956346408/1078380774811779202/1078794343692906656
+8. To run Redis in the cloud - https://discord.com/channels/877056448956346408/1078380774811779202/1078796458934927391
+9. 
