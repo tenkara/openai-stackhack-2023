@@ -22,4 +22,42 @@ Process to get started with Redis vector database and openai:
 6. For step by step setup of Redis as a vector databsae with openai use this - https://github.com/openai/openai-cookbook/blob/main/examples/vector_databases/redis/getting-started-with-redis-and-openai.ipynb
 7. To run Redis locally - https://discord.com/channels/877056448956346408/1078380774811779202/1078794343692906656
 8. To run Redis in the cloud - https://discord.com/channels/877056448956346408/1078380774811779202/1078796458934927391
-9. 
+
+Routes:
+1. session - start a user session and store in the DB
+2. chat route like /chat{message, chatid}
+    1. If no chatId provided also send back and create chatID in JSON response along with message
+   1. Run the knn with the message as the similarity search
+   2. Run GPT to formulate a question to narrow down the results
+   3. Send response to the user from the GPT's question
+   4. If the user responds back with another message
+   5. Run the knn with the previous data and this data to narrow down the results
+   6. Repeat until the similarity threshold is higher than 0.8 or 0.9 or number of results above 0.5 is less than 3
+3. need a route to retrieve user's EHR
+
+
+Data model:
+
+Chat {
+    id
+    userid
+    messages
+}
+
+Message {
+    id
+    userid
+    content
+    timesent
+}
+
+MVP 1:
+1. An easy to use, user-friendly interface to chat with the health assistant AI app (0%)
+2. Demonstrate the user's search for health symptoms is as good or better than google (90%+)
+3. Demonstrate that the app can provide results in multiple languages (90%+)
+4. Demonstrate that the app can also customize the results with EHR data (0%)
+5. Position for the next iteration to be more solid with prompt engineering (0%)
+6. Demonstrate integration with Redis (100%)
+
+MVP 1+:
+6. Able to support user's historical chat and contexts to provide a personalized health assistant (0%)
