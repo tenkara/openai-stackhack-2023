@@ -25,7 +25,7 @@ export default function Home() {
                 <Header />
                 <section className="mx-auto mt-20 max-w-5xl">
                     <div className="flex flex-row">
-                        <div className="basis flex md:basis-7/12 flex-col">
+                        <div className="basis flex flex-col md:basis-7/12">
                             <h1 className="text-7xl font-medium text-text">
                                 Your personal{" "}
                                 <span className="text-primary">health</span>{" "}
@@ -101,7 +101,7 @@ export default function Home() {
                         technologies we used.
                     </p>
 
-                    <div className="mt-8 flex flex-row items-center justify-center gap-20 flex-wrap">
+                    <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-20">
                         <Image
                             src="/logos/openai.png"
                             alt="OpenAi Logo"
