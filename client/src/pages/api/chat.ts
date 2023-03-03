@@ -30,15 +30,16 @@ export default withApiAuthRequired(async (
         };
 
         const { access_token: accessToken } = await axios.request(options).then(({ data }) => data);
-        const { data } = await axios.get(process.env.API_URL + '/chat', {
+        const { data } = await axios.request({
+            method: req.method,
+            url: process.env.API_URL + '/chat',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
+            data: req.body,
         }).then(({ data }) => data);
 
-        res.status(200).json({
-            data
-        })
+        res.status(200).json(data)
     } catch (error: any) {
         console.error(error)
         res.status(error.status || 500).end(error.message)

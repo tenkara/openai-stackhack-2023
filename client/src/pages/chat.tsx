@@ -2,35 +2,44 @@ import Message from "@/components/chat/Message";
 import Header from "@/components/shell/Header";
 import useChat from "@/hooks/useChat";
 import { MessageI } from "@/types/Chat.types";
+import axios from "axios";
 import React, { FormEvent } from "react";
 import { BsChevronRight } from "react-icons/bs";
 import { FiSend } from "react-icons/fi";
+import PendingMessage from "./../components/chat/PendingMessage";
 
 type Props = {};
 
 export default function Chat({}: Props) {
     const [input, setInput] = React.useState("");
     const [messages, setMessages] = React.useState<MessageI[]>([]);
-    const { isSuccess, data, isLoading, isError } = useChat("1");
+    const [loading, setLoading] = React.useState(false);
 
-    React.useEffect(() => {
-        if (isSuccess) {
-            setMessages(data);
-        }
-    }, [isSuccess, data]);
-
-    const handleSendMessage = (e: FormEvent<HTMLFormElement>) => {
+    const handleSendMessage = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (input === "") return;
 
         const newMessage = {
             id: messages.length + 1,
             content: input,
-            sender: "user",
+            role: "user",
         };
 
         setMessages([...messages, newMessage] as MessageI[]);
 
+        try {
+            setLoading(true);
+            const { data } = await axios.post("/api/chat", {
+                messages: [
+                    ...messages.map(({ content, role }) => ({ content, role })),
+                    { content: input, role: "user" },
+                ],
+            });
+            console.log(data);
+
+            setMessages([...messages, newMessage, data] as MessageI[]);
+        } catch {}
+        setLoading(false);
         setInput("");
     };
 
@@ -39,14 +48,14 @@ export default function Chat({}: Props) {
             <Header />
             <div className="mx-auto flex w-full max-w-4xl grow flex-col">
                 <div className="flex grow flex-col  justify-end p-4">
-                    {messages.map(({ id, sender, content }) => (
+                    {messages.map(({ role, content }, i) => (
                         <Message
-                            key={id}
-                            id={id}
-                            sender={sender as "bot" | "user"}
+                            key={"message-" + i}
+                            role={role}
                             content={content}
                         />
                     ))}
+                    {loading && <PendingMessage />}
                 </div>
 
                 <form
