@@ -61,6 +61,12 @@ export default function Home() {
                     </p>
 
                     <div className="mt-8 flex flex-row items-center justify-center gap-20 px-10">
+                      <Image
+                          src="/people/josh.png"
+                          alt="Josh Nakka"
+                          width={150}
+                          height={150}
+                      />
                         <Image
                             src="/people/lizzie.jpg"
                             alt="Lizzie Nakka"
@@ -69,10 +75,11 @@ export default function Home() {
                             className="rounded-full p-1"
                         />
                         <Image
-                            src="/people/josh.png"
-                            alt="Josh Nakka"
+                            src="/people/jason.png"
+                            alt="Jason Nakka"
                             width={150}
                             height={150}
+                            className="rounded-full"
                         />
                         <Image
                             src="/people/raj.png"
