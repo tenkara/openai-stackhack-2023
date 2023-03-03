@@ -13,15 +13,17 @@ export default function Header({}: Props) {
     const { user } = useUser();
 
     return (
-        <header className="sticky top-0 h-[70px] border-b border-b-gray-200">
+        <header className="sticky top-0 z-[20] h-[70px] border-b border-b-gray-200">
             <div className="h-full bg-primary-50">
                 <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-4">
-                    <Image
-                        src="/logo.svg"
-                        alt="Smarthealth logo"
-                        width={200}
-                        height={50}
-                    />
+                    <Link href="/">
+                        <Image
+                            src="/logo.svg"
+                            alt="Smarthealth logo"
+                            width={200}
+                            height={50}
+                        />
+                    </Link>
                     <div>
                         {user ? (
                             <Menu>
@@ -42,7 +44,7 @@ export default function Header({}: Props) {
                                 </Menu.Dropdown>
                             </Menu>
                         ) : (
-                            <Link href="/api/auth/login">Login</Link>
+                            <Link href="/api/auth/login" className="text-text text-xl">Login</Link>
                         )}
                     </div>
                 </div>

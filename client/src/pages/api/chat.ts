@@ -29,10 +29,12 @@ export default withApiAuthRequired(async (
             })
         };
 
+        const { sp } = req.query;
+
         const { access_token: accessToken } = await axios.request(options).then(({ data }) => data);
         const { data } = await axios.request({
             method: req.method,
-            url: process.env.API_URL + '/chat',
+            url: process.env.API_URL +  (sp ? `/sp` : '') + '/chat',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
