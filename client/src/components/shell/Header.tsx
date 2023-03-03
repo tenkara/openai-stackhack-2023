@@ -13,7 +13,7 @@ export default function Header({}: Props) {
     const { user } = useUser();
 
     return (
-        <header className="sticky top-0 h-[70px] border-b border-b-gray-200">
+        <header className="sticky top-0 h-[70px] border-b border-b-gray-200 z-[20]">
             <div className="h-full bg-primary-50">
                 <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-4">
                     <Image

@@ -8,7 +8,7 @@ import Link from "next/link";
 import React, { FormEvent } from "react";
 import { BsChevronRight, BsArrowDown } from "react-icons/bs";
 import { FiSend } from "react-icons/fi";
-import PendingMessage from "./../components/chat/PendingMessage";
+import PendingMessage from "./../../components/chat/PendingMessage";
 
 type Props = {};
 
@@ -38,7 +38,7 @@ export default function Chat({}: Props) {
 
         try {
             setLoading(true);
-            const { data } = await axios.post("/api/chat", {
+            const { data } = await axios.post("/api/chat?sp=true", {
                 messages: [
                     ...messages.map(({ content, role }) => ({ content, role })),
                     { content: input, role: "user" },
@@ -69,16 +69,18 @@ export default function Chat({}: Props) {
                             height={50}
                         />
                         <h1 className="text-3xl text-text">
-                            Your Personal Health Assistant
+                            {/* Your Personal Health Assistant */}
+                            Su Asistente de Salud Personal
                         </h1>
+                        <h2 className="mt-20 text-2xl text-text-200">
+                            {/* Start a Conversation Below */}
+                            Inicie una conversación a continuación
+                        </h2>
                         <Link href="/sp/chat">
-                            <div className="text-text-200 mt-4 bg-primary-100 p-2 text-xl rounded hover:shadow">
-                                Habla español?
+                            <div className="mt-4 rounded bg-primary-100 p-2 text-xl text-text-200 hover:shadow">
+                                Speak English?
                             </div>
                         </Link>
-                        <h2 className="mt-20 text-2xl text-text-200">
-                            Start a Conversation Below
-                        </h2>
                         <BsArrowDown className="mt-10 animate-bounce text-4xl text-text-200" />
                     </div>
                     {messages.map(({ role, content }, i) => (
@@ -100,7 +102,7 @@ export default function Chat({}: Props) {
                     </div>
                     <input
                         className="z-[10] h-14 grow bg-white py-2 px-2"
-                        placeholder="Type your message here..."
+                        placeholder="Escribe tu mensaje aquí..." //Type your message here
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                     />
