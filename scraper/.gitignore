@@ -1,5 +1,3 @@
 **/venv/**
 *.env
-**/.venv/**
-*Review*
 **/data/**
