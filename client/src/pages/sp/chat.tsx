@@ -2,6 +2,7 @@ import Message from "@/components/chat/Message";
 import Header from "@/components/shell/Header";
 import useChat from "@/hooks/useChat";
 import { MessageI } from "@/types/Chat.types";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +13,7 @@ import PendingMessage from "./../../components/chat/PendingMessage";
 
 type Props = {};
 
-export default function Chat({}: Props) {
+function Chat({}: Props) {
     const [input, setInput] = React.useState("");
     const [messages, setMessages] = React.useState<MessageI[]>([]);
     const [loading, setLoading] = React.useState(false);
@@ -117,3 +118,5 @@ export default function Chat({}: Props) {
         </div>
     );
 }
+
+export default withPageAuthRequired(Chat);

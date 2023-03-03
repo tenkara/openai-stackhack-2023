@@ -44,7 +44,7 @@ export default function Header({}: Props) {
                                 </Menu.Dropdown>
                             </Menu>
                         ) : (
-                            <Link href="/api/auth/login">Login</Link>
+                            <Link href="/api/auth/login" className="text-text text-xl">Login</Link>
                         )}
                     </div>
                 </div>
