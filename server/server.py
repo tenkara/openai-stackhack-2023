@@ -149,46 +149,23 @@ def chat():
 @app.route("/sp/chat", methods=["GET", "POST"])
 @cross_origin(headers=["Content-Type", "Authorization"])
 @require_auth(None)
-def chat():
+def spchat():
     if request.method == "POST":
         # Get the messages from the post body in json format
         messages = request.get_json()["messages"]
-
-        # response = openai.ChatCompletion.create(
-        #     model="gpt-3.5-turbo",
-        #     messages=[{"role": "system", "content": "I am a digital health bot who is able to help diagnose symptoms, how can I help you?"}, *messages],
-        # )
-
-        # prompt engineering...
-        search_message = ''
-        for message in messages:
-            if (message['role'] == 'user'):
-                search_message =  message['content'] + ' ' + search_message
-        print(search_message)
- 
-        # Call the openai api to get the response
-        response = search_symptoms(df, search_message, n=5)
-
-        # handle the response...
-        print(response)
-        print(response.head(1).values[0][:200])
-
-        # return jsonify({
-        #     "data": {
-        #             "id": 1,
-        #             "role": "system",
-        #             "content": response.choices[0].message.content
-        #         }
-        # })
-
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "I are a spanish digital health bot who is able to help diagnose symptoms, how can I help you?"}, *messages],
+        )
         return jsonify({
-            "data":
-                {
+            "data": {   
                     "id": 1,
                     "role": "system",
-                    "content": response.head(1).values[0][:200]
+                    "content": response.choices[0].message.content
                 }
         })
+
     return jsonify({
         "data": [
             {   
