@@ -176,5 +176,36 @@ def spchat():
         ]
     })
 
+@app.route("/sp/chat", methods=["GET", "POST"])
+@cross_origin(headers=["Content-Type", "Authorization"])
+@require_auth(None)
+def spchat():
+    if request.method == "POST":
+        # Get the messages from the post body in json format
+        messages = request.get_json()["messages"]
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "I are a spanish digital health bot who is able to help diagnose symptoms, how can I help you?"}, *messages],
+        )
+        return jsonify({
+            "data": {   
+                    "id": 1,
+                    "role": "system",
+                    "content": response.choices[0].message.content
+                }
+        })
+
+    return jsonify({
+        "data": [
+            {   
+                "id": 1,
+                "sender": "user",
+                "content": "Hello, how are you?"
+            },
+        ]
+    })
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 3010))
