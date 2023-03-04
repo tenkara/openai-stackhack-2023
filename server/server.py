@@ -11,11 +11,17 @@ import openai
 import pandas as pd
 import numpy as np
 from openai.embeddings_utils import get_embedding, cosine_similarity
+from redis_search import search
+import redis
 
 # Load Environment Variables
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
+
+REDIS_HOST = env.get("REDIS_HOST")
+REDIS_PORT = env.get("REDIS_PORT")
+REDIS_PASSWORD = env.get("REDIS_PASSWORD")
 AUTH0_DOMAIN = env.get("AUTH0_DOMAIN")
 API_IDENTIFIER = env.get("API_IDENTIFIER")
 ALGORITHMS = ["RS256"]
@@ -25,6 +31,11 @@ openai.api_key = env.get("OPENAI_API_KEY")
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+redis_client = redis.Redis(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    password=REDIS_PASSWORD
+)
 
 # Middleware
 require_auth = ResourceProtector()
@@ -40,32 +51,7 @@ embedding_model = "text-embedding-ada-002"
 embedding_encoding = "cl100k_base"  # latest tokenizer for second gen models
 max_tokens = 8000  # max tokens for second gen models and tokenizer above is 8191
 
-# Load the embedding data
-df = pd.read_csv("data/wmd_1452_embeddings.csv")
-df_multilang = pd.read_csv("data/mplus_full_embeddings.csv")
-
-# when reading from csv to ensure correct data types
-df["embedding"] = df.embedding.apply(eval).apply(np.array)
-df_multilang = df_multilang.apply(eval).apply(np.array)
-
 # search through the symptoms for the most similar topic
-
-
-def search_symptoms(df, symptoms, n=5, pprint=True):
-    symptoms_embedding = get_embedding(symptoms, engine=embedding_model)
-    df["similarity"] = df.embedding.apply(
-        lambda x: cosine_similarity(x, symptoms_embedding))
-    results = (
-        df.sort_values("similarity", ascending=False)
-        .head(n)
-        .combined.str.replace("Topic: ", "")
-        .str.replace("Symptoms: ", "")
-    )
-    if pprint:
-        for r in results:
-            print(r[:200])
-            print()
-    return results
 
 
 # Routes
@@ -101,71 +87,32 @@ def chat():
         # Get the messages from the post body in json format
         messages = request.get_json()["messages"]
 
-        # response = openai.ChatCompletion.create(
-        #     model="gpt-3.5-turbo",
-        #     messages=[{"role": "system", "content": "I am a digital health bot who is able to help diagnose symptoms, how can I help you?"}, *messages],
-        # )
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "I am a digital health bot who is able to help diagnose symptoms, how can I help you?"}, *messages],
+        )
 
         # prompt engineering...
         search_message = ''
         for message in messages:
             if (message['role'] == 'user'):
                 search_message =  message['content'] + ' ' + search_message
-        print(search_message)
  
         # Call the openai api to get the response
-        response = search_symptoms(df, search_message, n=5)
-
-        # handle the response...
-        print(response)
-        print(response.head(1).values[0][:200])
-
-        # return jsonify({
-        #     "data": {
-        #             "id": 1,
-        #             "role": "system",
-        #             "content": response.choices[0].message.content
-        #         }
-        # })
+        urls = search(redis_client, search_message, k=1)[0]
+        url = urls.__dict__["url"]
+        if float(urls.__dict__["vector_score"]) > .2:
+            url = None
 
         return jsonify({
             "data":
                 {
                     "id": 1,
                     "role": "system",
-                    "content": response.head(1).values[0][:200]
+                    "content": response.choices[0].message.content,
+                    "url": url
                 }
         })
-    return jsonify({
-        "data": [
-            {   
-                "id": 1,
-                "sender": "user",
-                "content": "Hello, how are you?"
-            },
-        ]
-    })
-
-@app.route("/sp/chat", methods=["GET", "POST"])
-@cross_origin(headers=["Content-Type", "Authorization"])
-@require_auth(None)
-def spchat():
-    if request.method == "POST":
-        # Get the messages from the post body in json format
-        messages = request.get_json()["messages"]
-        
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": "I are a spanish digital health bot who is able to help diagnose symptoms, how can I help you?"}, *messages],
-        )
-        return jsonify({
-            "data": {   
-                    "id": 1,
-                    "role": "system",
-                    "content": response.choices[0].message.content
-                }
-        })
-
     return jsonify({
         "data": [
             {   

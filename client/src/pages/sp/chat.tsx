@@ -22,7 +22,6 @@ function Chat({}: Props) {
         // Keep document scrolled to bottom
         const chat = document.getElementById("chat");
         if (chat) window.scrollTo(0, chat.scrollHeight);
-        console.log(chat);
     }, [messages]);
 
     const handleSendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -45,7 +44,6 @@ function Chat({}: Props) {
                     { content: input, role: "user" },
                 ],
             });
-            console.log(data);
 
             setMessages([...messages, newMessage, data] as MessageI[]);
         } catch {}
@@ -84,10 +82,11 @@ function Chat({}: Props) {
                         </Link>
                         <BsArrowDown className="mt-10 animate-bounce text-4xl text-text-200" />
                     </div>
-                    {messages.map(({ role, content }, i) => (
+                    {messages.map(({ role, content, url }, i) => (
                         <Message
                             key={"message-" + i}
                             role={role}
+                            url={url}
                             content={content}
                         />
                     ))}
